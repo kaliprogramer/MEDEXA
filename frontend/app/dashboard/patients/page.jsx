@@ -4,51 +4,32 @@ import {
     Eye,
     Pencil,
     Trash2,
-    MoreHorizontal,
     Plus,
 } from "lucide-react";
+import PatientProfileModal from "../../../components/PatientProfileModal";
 import {useEffect, useState} from "react";
-import {get_patients, post_patients} from "../../lib/api/patients_API";
-
-// [
-//     {
-//         id: "PAT-001",
-//         name: "Ram Sharma",
-//         gender: "Male",
-//         age: 28,
-//         blood: "O+",
-//         phone: "9800000000",
-//         status: "Active",
-//     },
-//     {
-//         id: "PAT-002",
-//         name: "Sita Thapa",
-//         gender: "Female",
-//         age: 34,
-//         blood: "A+",
-//         phone: "9811111111",
-//         status: "Active",
-//     },
-//     {
-//         id: "PAT-003",
-//         name: "Hari KC",
-//         gender: "Male",
-//         age: 45,
-//         blood: "B+",
-//         phone: "9822222222",
-//         status: "Inactive",
-//     },
-// ];
-
+import {get_patients, post_patients,delete_patient,put_patient} from "../../lib/api/patients_API";
+import ConfirmDeletePatients from "../../../components/ConfirmDeletePatients";
+import toast from "react-hot-toast";
 export default function PatientTable() {
         const [patient, setPatient] = useState([]);
         const [name, setName] = useState("");
-
+        const [editingPatient, setEditingPatient] = useState(null);
+        const [showAddPatient, setShowAddPatient] = useState(false);
+        const [showEditPatient, setShowEditPatient] = useState(false);
         const [nextPage, setNextPage] = useState(null);
         const [previousPage, setPreviousPage] = useState(null);
-
+        const [deletingPatientId, setDeletingPatientId] = useState(null);
         const [currentPage, setCurrentPage] = useState(1);
         const [totalPatients, setTotalPatients] = useState(0);
+        const [selectedViewPatient, setSelectedViewPatient] = useState(null);
+        const [showProfile, setShowProfile] = useState(false);
+
+    const handleViewPatient = (patient) => {
+        setSelectedViewPatient(patient);
+        setShowProfile(true);
+    };
+
 
         const PAGE_SIZE = 10;
 
@@ -80,18 +61,68 @@ export default function PatientTable() {
     const handleView = (patient) => {
         console.log("View:", patient);
     };
-    const [showAddPatient, setShowAddPatient] = useState(false);
     const handleEdit = (patient) => {
-        console.log("Edit:", patient);
+        setEditingPatient(patient);
+        setShowEditPatient(true)
     };
 
     const handleDelete = (patient) => {
-        console.log("Delete:", patient);
+        // Highlight the selected row
+        setDeletingPatientId(patient.id);
+
+        ConfirmDeletePatients({
+            patient,
+
+            // User clicked Cancel
+            onCancel: () => {
+                setDeletingPatientId(null);
+            },
+
+            // User clicked Delete
+            onConfirm: async (toastId) => {
+                try {
+                    // Keep row highlighted while deleting
+                    const result = await delete_patient(patient.id);
+
+                    // Remove patient only after API succeeds
+                    setPatient((prev) =>
+                        prev.filter((p) => p.id !== patient.id)
+                    );
+
+                    setDeletingPatientId(null);
+
+                    toast.dismiss(toastId);
+
+                    toast.success("Patient deleted successfully", {
+                        duration: 3000,
+                    });
+
+                } catch (error) {
+                    console.error("Failed to delete patient:", error);
+
+                    // Restore normal row appearance
+                    setDeletingPatientId(null);
+
+                    toast.error("Failed to delete patient", {
+                        duration: 3000,
+                    });
+                }
+            },
+        });
     };
 
     return (
         <div className="w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 mt-20">
-
+            {showProfile && (
+                <PatientProfileModal
+                    patient={selectedViewPatient}
+                    open={showProfile}
+                    onClose={() => {
+                        setShowProfile(false);
+                        setSelectedViewPatient(null);
+                    }}
+                />
+            )}
             {/* Table Header */}
             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
 
@@ -100,7 +131,7 @@ export default function PatientTable() {
                         Patients
                     </h2>
 
-                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 ">
                         Manage and view all registered patients
                     </p>
                 </div>
@@ -108,7 +139,7 @@ export default function PatientTable() {
                 <div className="flex items-center gap-3">
 
         <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
-            {patient.length} Patients
+            {totalPatients} Patients
         </span>
 
                     <button
@@ -165,7 +196,14 @@ export default function PatientTable() {
                         return (
                             <tr
                                 key={data.id}
-                                className="transition hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                                className={`
+        transition-all duration-300
+        ${
+                                    deletingPatientId === data.id
+                                        ? "bg-red-50/80 dark:bg-red-500/10"
+                                        : "hover:bg-slate-50 dark:hover:bg-slate-800/40"
+                                }
+    `}
                             >
                                 {/* Patient */}
                                 <td className="px-6 py-4">
@@ -230,7 +268,7 @@ export default function PatientTable() {
 
                                         {/* View */}
                                         <button
-                                            onClick={() => handleView(data)}
+                                            onClick={() => handleViewPatient(data)}
                                             title="View patient"
                                             className="rounded-lg p-2 text-slate-500 transition hover:bg-blue-50 hover:text-blue-600 dark:text-slate-400 dark:hover:bg-blue-500/10 dark:hover:text-blue-400"
                                         >
@@ -249,18 +287,26 @@ export default function PatientTable() {
                                         {/* Delete */}
                                         <button
                                             onClick={() => handleDelete(data)}
+                                            disabled={deletingPatientId === data.id}
                                             title="Delete patient"
-                                            className="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-500/10 dark:hover:text-red-400"
+                                            className={`
+        rounded-lg p-2 transition-all duration-200
+        ${
+                                                deletingPatientId === data.id
+                                                    ? "bg-red-100 text-red-600 dark:bg-red-500/20 dark:text-red-400"
+                                                    : "text-slate-500 hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-500/10 dark:hover:text-red-400"
+                                            }
+        disabled:cursor-not-allowed
+    `}
                                         >
-                                            <Trash2 size={17} />
-                                        </button>
-
-                                        {/* More */}
-                                        <button
-                                            title="More"
-                                            className="ml-1 rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
-                                        >
-                                            <MoreHorizontal size={17} />
+                                            <Trash2
+                                                size={17}
+                                                className={
+                                                    deletingPatientId === data.id
+                                                        ? "animate-pulse"
+                                                        : ""
+                                                }
+                                            />
                                         </button>
 
                                     </div>
@@ -365,7 +411,7 @@ export default function PatientTable() {
             </div>
             {/* Add Patient Modal */}
             {showAddPatient && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6 ">
 
                     <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl dark:bg-slate-900">
 
@@ -449,7 +495,7 @@ export default function PatientTable() {
                                             name="first_name"
                                             placeholder="Ram"
                                             required
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -465,7 +511,7 @@ export default function PatientTable() {
                                             name="last_name"
                                             placeholder="Sharma"
                                             required
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -479,7 +525,7 @@ export default function PatientTable() {
                                         <input
                                             type="date"
                                             name="date_of_birth"
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 text-slate-500 dark:text-white"
                                         />
                                     </div>
 
@@ -493,7 +539,7 @@ export default function PatientTable() {
                                         <select
                                             name="gender"
                                             required
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800  text-slate-500 dark:text-white"
                                         >
                                             <option value="">Select Gender</option>
                                             <option value="MALE">Male</option>
@@ -511,7 +557,7 @@ export default function PatientTable() {
 
                                         <select
                                             name="blood_group"
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800 text-slate-500 dark:text-white"
                                         >
                                             <option value="">Select Blood Group</option>
                                             <option value="A+">A+</option>
@@ -534,7 +580,7 @@ export default function PatientTable() {
                             <section>
 
                                 <div className="mb-4">
-                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                                    <h3 className=" text-sm font-semibold text-slate-900 dark:text-white">
                                         Contact Information
                                     </h3>
 
@@ -556,7 +602,7 @@ export default function PatientTable() {
                                             type="tel"
                                             name="phone"
                                             placeholder="9800000000"
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -571,7 +617,7 @@ export default function PatientTable() {
                                             type="email"
                                             name="email"
                                             placeholder="patient@example.com"
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -586,7 +632,7 @@ export default function PatientTable() {
                                             name="address"
                                             rows={2}
                                             placeholder="Patient's current address"
-                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className=" placeholder-slate-400 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -601,7 +647,7 @@ export default function PatientTable() {
                                             type="text"
                                             name="emergency_contact"
                                             placeholder="Name and phone number"
-                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -636,7 +682,7 @@ export default function PatientTable() {
                                             name="allergies"
                                             rows={2}
                                             placeholder="e.g. Penicillin, peanuts, dust"
-                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -651,7 +697,7 @@ export default function PatientTable() {
                                             name="medical_history"
                                             rows={3}
                                             placeholder="Previous illnesses, surgeries, conditions, etc."
-                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -666,7 +712,7 @@ export default function PatientTable() {
                                             name="current_medications"
                                             rows={3}
                                             placeholder="List current medications and dosage"
-                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -681,7 +727,7 @@ export default function PatientTable() {
                                             name="notes"
                                             rows={3}
                                             placeholder="Additional notes about the patient"
-                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                            className="placeholder-slate-400 w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
                                         />
                                     </div>
 
@@ -711,6 +757,407 @@ export default function PatientTable() {
 
                             </div>
 
+                        </form>
+
+                    </div>
+                </div>
+            )}
+            {showEditPatient && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
+
+                    <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-xl dark:bg-slate-900">
+
+                        {/* Modal Header */}
+                        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-5 dark:border-slate-800 dark:bg-slate-900">
+
+                            <div>
+                                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                                    Edit Patient
+                                </h2>
+
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                                    Edit the patient's personal and medical information
+                                </p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowEditPatient(false)}
+
+                                className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-white"
+                            >
+                                ✕
+                            </button>
+
+                        </div>
+
+
+                        {/* Form */}
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+
+                                const formData = new FormData(e.currentTarget);
+
+                                const data = {
+                                    first_name: formData.get("first_name"),
+                                    last_name: formData.get("last_name"),
+                                    date_of_birth: formData.get("date_of_birth"),
+                                    email: formData.get("email"),
+                                    phone: formData.get("phone"),
+                                    gender: formData.get("gender"),
+                                    blood_group: formData.get("blood_group"),
+                                    address: formData.get("address"),
+                                    emergency_contact: formData.get("emergency_contact"),
+                                    allergies: formData.get("allergies"),
+                                    medical_history: formData.get("medical_history"),
+                                    current_medications: formData.get("current_medications"),
+                                    note: formData.get("note"),
+                                    status: formData.get("status"),
+                                };
+
+                                try {
+                                    if (editingPatient) {
+                                        // EDIT
+                                        const result = await put_patient(editingPatient.id, data);
+
+                                        setPatient((prev) =>
+                                            prev.map((p) =>
+                                                p.id === editingPatient.id
+                                                    ? result
+                                                    : p
+                                            )
+                                        );
+
+                                        toast.success("Patient updated successfully");
+                                    } else {
+                                        // ADD
+                                        const result = await post_patients(data);
+
+                                        setPatient((prev) => [
+                                            result,
+                                            ...prev,
+                                        ]);
+
+                                        toast.success("Patient added successfully");
+                                    }
+
+                                    // Close modal
+                                    setShowEditPatient(false);
+
+                                } catch (error) {
+                                    console.error(error);
+
+                                    toast.error(
+                                        editingPatient
+                                            ? "Failed to update patient"
+                                            : "Failed to add patient"
+                                    );
+                                }
+                            }}
+                            className="space-y-8 p-6"
+                        >
+                            {/* ================= PERSONAL INFORMATION ================= */}
+                            <section>
+                                <div className="mb-4">
+                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                                        Personal Information
+                                    </h3>
+
+                                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                        Basic information about the patient
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                                    {/* First Name */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            First Name
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="first_name"
+                                            placeholder="Ram"
+                                            defaultValue={editingPatient?.first_name || ""}
+                                            required
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Last Name */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Last Name
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="last_name"
+                                            placeholder="Sharma"
+                                            defaultValue={editingPatient?.last_name || ""}
+                                            required
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Date of Birth */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Date of Birth
+                                        </label>
+
+                                        <input
+                                            type="date"
+                                            name="date_of_birth"
+                                            defaultValue={editingPatient?.date_of_birth || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                        />
+                                    </div>
+
+                                    {/* Gender */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Gender
+                                        </label>
+
+                                        <select
+                                            name="gender"
+                                            required
+                                            defaultValue={editingPatient?.gender || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                        >
+                                            <option value="" className="text-slate-400">
+                                                Select Gender
+                                            </option>
+                                            <option value="MALE">Male</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Blood Group */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Blood Group
+                                        </label>
+
+                                        <select
+                                            name="blood_group"
+                                            defaultValue={editingPatient?.blood_group || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                        >
+                                            <option value="" className="text-slate-400">
+                                                Select Blood Group
+                                            </option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Status */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Status
+                                        </label>
+
+                                        <select
+                                            name="status"
+                                            defaultValue={editingPatient?.status || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                                        >
+                                            <option value="" className="text-slate-400">
+                                                Select Status
+                                            </option>
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            {/* ================= CONTACT INFORMATION ================= */}
+                            <section>
+                                <div className="mb-4">
+                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                                        Contact Information
+                                    </h3>
+
+                                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                        Contact details and emergency contact
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                                    {/* Phone */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Phone
+                                        </label>
+
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="9800000000"
+                                            defaultValue={editingPatient?.phone || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Email */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Email
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="patient@example.com"
+                                            defaultValue={editingPatient?.email || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Address */}
+                                    <div className="sm:col-span-2">
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Address
+                                        </label>
+
+                                        <textarea
+                                            name="address"
+                                            rows={2}
+                                            placeholder="Patient's current address"
+                                            defaultValue={editingPatient?.address || ""}
+                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Emergency Contact */}
+                                    <div className="sm:col-span-2">
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Emergency Contact
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="emergency_contact"
+                                            placeholder="Name and phone number"
+                                            defaultValue={editingPatient?.emergency_contact || ""}
+                                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            {/* ================= MEDICAL INFORMATION ================= */}
+                            <section>
+                                <div className="mb-4">
+                                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                                        Medical Information
+                                    </h3>
+
+                                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                                        Medical history and current health information
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+
+                                    {/* Allergies */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Allergies
+                                        </label>
+
+                                        <textarea
+                                            name="allergies"
+                                            rows={2}
+                                            defaultValue={editingPatient?.allergies || ""}
+                                            placeholder="e.g. Penicillin, peanuts, dust"
+                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Medical History */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Medical History
+                                        </label>
+
+                                        <textarea
+                                            name="medical_history"
+                                            rows={3}
+                                            defaultValue={editingPatient?.medical_history || ""}
+                                            placeholder="Previous illnesses, surgeries, conditions, etc."
+                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Current Medications */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Current Medications
+                                        </label>
+
+                                        <textarea
+                                            name="current_medications"
+                                            rows={3}
+                                            defaultValue={editingPatient?.current_medications || ""}
+                                            placeholder="List current medications and dosage"
+                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                    {/* Notes */}
+                                    <div>
+                                        <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                                            Notes
+                                        </label>
+
+                                        <textarea
+                                            name="notes"
+                                            rows={3}
+                                            placeholder="Additional notes about the patient"
+                                            defaultValue={editingPatient?.notes || ""}
+                                            className="w-full resize-none rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500"
+                                        />
+                                    </div>
+
+                                </div>
+                            </section>
+
+                            {/* ================= BUTTONS ================= */}
+                            <div className="flex justify-end gap-3 border-t border-slate-200 pt-5 dark:border-slate-800">
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEditPatient(false)}
+                                    className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    type="submit"
+                                    className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                                >
+                                    Edit Patient
+                                </button>
+
+                            </div>
                         </form>
 
                     </div>

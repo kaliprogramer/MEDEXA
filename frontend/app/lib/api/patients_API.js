@@ -36,3 +36,31 @@ export async function post_patients(patientData) {
 
     return data;
 }
+
+export async function delete_patient(patientId) {
+    const response = await fetch(`${apiUrl}/patients/${patientId}/`, {
+        method: 'DELETE',
+        credentials: 'include',
+    })
+    if (!response.ok) {
+        toast.error("Failed to Delete patient");
+        throw new Error("Failed to Delete patient");
+    }
+
+}
+
+export  async function put_patient(patientId,patientData) {
+    const response = await fetch(`${apiUrl}/patients/${patientId}/`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(patientData),
+    })
+    if (!response.ok) {
+        toast.error("Failed to Edit patient");
+    }
+
+    return response.json()
+}

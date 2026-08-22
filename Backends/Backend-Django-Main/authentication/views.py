@@ -57,7 +57,7 @@ class LoginView(TokenObtainPairView):
             httponly=True,
             secure=False,       # True in production HTTPS
             samesite="Lax",
-            max_age=5 * 60
+            max_age=1 * 24 *  60 * 60
         )
 
         response.set_cookie(

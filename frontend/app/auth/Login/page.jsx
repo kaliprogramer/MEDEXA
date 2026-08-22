@@ -102,7 +102,7 @@ export default function LoginPage() {
                         <div className="flex items-center gap-3">
                             <div className="flex h-10 w-40 items-center justify-center ">
                                 <Image
-                                    src="/Logo.png"
+                                    src="/logo_enhance.png"
                                     alt="Clinora logo"
                                     width={200}
                                     height={200}
@@ -112,7 +112,7 @@ export default function LoginPage() {
                             <div>
                                 <h1 className="text-lg font-bold">
                                     <Image
-                                        src="/logo_text.png"
+                                        src="/logo_text_enhance.png"
                                         alt="Clinora logo"
                                         width={400}
                                         height={400}

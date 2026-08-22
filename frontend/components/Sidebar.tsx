@@ -58,13 +58,13 @@ const otherItems = [
     icon: Users,
   },
   {
-    name: "Prediction History",
-    href: "/dashboard/history",
+    name: "Doctors",
+    href: "/dashboard/doctors",
     icon: History,
   },
   {
-    name: "Reports",
-    href: "/dashboard/reports",
+    name: "Inventory",
+    href: "/dashboard/inventory",
     icon: FileText,
   },
   {
@@ -127,7 +127,7 @@ export default function Sidebar() {
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center ">
               <Image
-                  src="/Logo.png"
+                  src="/logo_enhance.png"
                   alt="Clinora logo"
                   width={120}
                   height={120}
@@ -137,7 +137,7 @@ export default function Sidebar() {
             <div>
               <h1 className="text-lg font-bold">
                 <Image
-                    src="/logo_text.png"
+                    src="/logo.png"
                     alt="Clinora logo"
                     width={120}
                     height={120}
@@ -178,7 +178,7 @@ export default function Sidebar() {
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center ">
                 <Image
-                    src="/Logo.png"
+                    src="/logo_enhance.png"
                     alt="Clinora logo"
                     width={120}
                     height={120}
@@ -188,7 +188,7 @@ export default function Sidebar() {
               <div>
                 <h1 className="text-lg font-bold">
                   <Image
-                      src="/logo_text.png"
+                      src="/logo.png"
                       alt="Clinora logo"
                       width={120}
                       height={120}
@@ -266,7 +266,7 @@ export default function Sidebar() {
 
             {/* Other */}
             <p className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Other
+              Management
             </p>
 
             {otherItems.map((item) => {
