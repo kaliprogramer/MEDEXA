@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+import uuid
 
 
 class Doctor(models.Model):
@@ -24,20 +25,42 @@ class Doctor(models.Model):
         ("OTHER", "Other"),
     ]
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="doctor_profile"
+    DEPARTMENT_CHOICES = [
+        ("GENERAL_MEDICINE", "General Medicine"),
+        ("CARDIOLOGY", "Cardiology"),
+        ("NEUROLOGY", "Neurology"),
+        ("DERMATOLOGY", "Dermatology"),
+        ("ONCOLOGY", "Oncology"),
+        ("ORTHOPEDICS", "Orthopedics"),
+        ("PEDIATRICS", "Pediatrics"),
+        ("PSYCHIATRY", "Psychiatry"),
+        ("RADIOLOGY", "Radiology"),
+        ("PULMONOLOGY", "Pulmonology"),
+        ("EMERGENCY", "Emergency"),
+        ("OTHER", "Other"),
+    ]
+
+    STATUS_CHOICES = [
+        ("Active", "Active"),
+        ("Inactive", "Inactive"),
+    ]
+
+    # ============================================================
+    # PERSONAL INFORMATION
+    # ============================================================
+
+    first_name = models.CharField(
+        max_length=100
     )
 
-    profile_image = models.ImageField(
-        upload_to="doctors/",
+    last_name = models.CharField(
+        max_length=100
+    )
+    image = models.ImageField(
+        upload_to="doctor_images/",
         blank=True,
         null=True
     )
-
-    full_name = models.CharField(max_length=150)
-
     gender = models.CharField(
         max_length=10,
         choices=GENDER_CHOICES,
@@ -50,9 +73,18 @@ class Doctor(models.Model):
         null=True
     )
 
+    # ============================================================
+    # PROFESSIONAL INFORMATION
+    # ============================================================
+
     specialization = models.CharField(
         max_length=50,
         choices=SPECIALIZATION_CHOICES
+    )
+
+    department = models.CharField(
+        max_length=50,
+        choices=DEPARTMENT_CHOICES
     )
 
     qualification = models.CharField(
@@ -60,22 +92,25 @@ class Doctor(models.Model):
         blank=True
     )
 
-    medical_license_number = models.CharField(
+    license_number = models.CharField(
         max_length=100,
         unique=True
     )
 
-    years_of_experience = models.PositiveIntegerField(
+    experience_years = models.PositiveIntegerField(
         default=0
     )
 
-    phone_number = models.CharField(
+    # ============================================================
+    # CONTACT INFORMATION
+    # ============================================================
+
+    phone = models.CharField(
         max_length=20,
         blank=True
     )
 
-    hospital_name = models.CharField(
-        max_length=255,
+    email = models.EmailField(
         blank=True
     )
 
@@ -83,17 +118,65 @@ class Doctor(models.Model):
         blank=True
     )
 
+    # ============================================================
+    # WORK INFORMATION
+    # ============================================================
+
+    joining_date = models.DateField(
+        blank=True,
+        null=True
+    )
+
+    consultation_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00
+    )
+
+    # ============================================================
+    # AVAILABILITY
+    # ============================================================
+
+    available_days = models.CharField(
+        max_length=255,
+        blank=True
+    )
+
+    available_from = models.TimeField(
+        blank=True,
+        null=True
+    )
+
+    available_to = models.TimeField(
+        blank=True,
+        null=True
+    )
+
+    # ============================================================
+    # STATUS
+    # ============================================================
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Active"
+    )
+
+    # ============================================================
+    # ADDITIONAL INFORMATION
+    # ============================================================
+
     bio = models.TextField(
         blank=True
     )
 
-    is_verified = models.BooleanField(
-        default=False
+    notes = models.TextField(
+        blank=True
     )
 
-    is_available = models.BooleanField(
-        default=True
-    )
+    # ============================================================
+    # TIMESTAMPS
+    # ============================================================
 
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -102,6 +185,21 @@ class Doctor(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    hospital = models.ForeignKey(
+            settings.AUTH_USER_MODEL,
+            on_delete=models.CASCADE,
+            related_name="doctor",
+            null=True,
+            blank=True
+        )
+
+    # ============================================================
+    # STRING REPRESENTATION
+    # ============================================================
 
     def __str__(self):
-        return self.full_name
+        return f"Dr. {self.first_name} {self.last_name}"
+
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
