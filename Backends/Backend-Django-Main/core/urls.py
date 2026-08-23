@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/auth/', include('authentication.urls')),
     path('api/patients/', include('patients.urls')),
     path('api/doctors/', include('doctors.urls')),
+    path('api/inventory/', include('inventory.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(

@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const API_BASE_URL =
     process.env.NEXT_PUBLIC_DJANGO_API_URL ||
     "http://localhost:8001/api";
@@ -6,33 +8,92 @@ const API_BASE_URL =
 /**
  * Get all doctors
  */
+async function refreshAccessToken(){
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/auth/refresh/`,
+            {
+                method: "POST",
+                credentials: "include",
+            }
+        );
+
+        if (!response.ok) {
+            return;
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Token refresh failed:", error);
+        return false;
+    }
+}
+
 export async function get_doctors(page = 1) {
-    const response = await fetch(
-        `${API_BASE_URL}/doctors/?page=${page}`,
-        {
+    const url = `${API_BASE_URL}/doctors/?page=${page}`;
+
+    // First request
+    let response = await fetch(url, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+            Accept: "application/json",
+        },
+    });
+
+    // Request worked
+    if (response.ok) {
+        return response.json();
+    }
+
+    // Only refresh when access token has expired
+    if (response.status === 401) {
+
+        console.log("Access token expired. Refreshing...");
+
+        const refreshed = await refreshAccessToken();
+
+        if (!refreshed) {
+            toast.error("Session expired. Please login again.");
+            throw new Error("AUTH_EXPIRED");
+        }
+
+        console.log("Access token refreshed successfully");
+
+        // Retry original request
+        response = await fetch(url, {
             method: "GET",
             credentials: "include",
             headers: {
                 Accept: "application/json",
             },
+        });
+
+        if (response.ok) {
+            toast.success("Session refreshed");
+            return response.json();
         }
-    );
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-
-        console.error(
-            "Doctor fetch error:",
-            errorData
-        );
-
-        throw new Error(
-            errorData.detail ||
-            "Failed to fetch doctors"
-        );
     }
 
-    return response.json();
+    // If retry also failed
+    const errorData = await response
+        .json()
+        .catch(() => ({}));
+
+    console.error(
+        "Doctor fetch error:",
+        errorData
+    );
+
+    toast.error(
+        errorData.detail ||
+        "Failed to fetch doctors"
+    );
+
+    throw new Error(
+        errorData.detail ||
+        "Failed to fetch doctors"
+    );
 }
 
 
