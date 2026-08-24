@@ -16,8 +16,8 @@ class StandardResultsSetPagination(PageNumberPagination):
 class InventoryItemViewSet(viewsets.ModelViewSet):
 
     queryset = InventoryItem.objects.all().order_by("-created_at")
-    # authentication_classes = [CookieJWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = StandardResultsSetPagination
     serializer_class = InventoryItemSerializer
     filterset_class = InventoryItemFilter
@@ -35,8 +35,8 @@ class InventoryItemViewSet(viewsets.ModelViewSet):
         "supplier",
     ]
     def get_queryset(self):
-            return InventoryItem.objects.all(
-                # hospital=self.request.user
+            return InventoryItem.objects.filter(
+                hospital=self.request.user
             ).order_by("-created_at")
     
     def perform_create(self, serializer):
