@@ -39,6 +39,8 @@ import {
     put_inventory,
     delete_inventory,
 } from "@/app/lib/api/inventory_API";
+import ConfirmDeleteInventory from "../../../components/ConfirmDeleteInventory";
+import {delete_patient} from "../../lib/api/patients_API";
 
 
 // ============================================================
@@ -330,8 +332,53 @@ export default function InventoryPage() {
 
     const [transactionType, setTransactionType] =
         useState("STOCK_IN");
+    const [deletingItemId, setDeletingItemId] = useState(null);
+    const handleDelete = (item) => {
+        setDeletingItemId(item.id);
 
+        ConfirmDeleteInventory({
+            item,
 
+            // User clicked Cancel
+            onCancel: () => {
+                setDeletingItemId(null);
+                toast.success("Cancel to delete item successfully", {
+                    duration: 3000,
+                });
+            },
+
+            // User clicked Delete
+            onConfirm: async (toastId) => {
+                try {
+                    // Keep row highlighted while deleting
+                    const result = await delete_inventory(item.id);
+
+                    // Remove patient only after API succeeds
+                    setItems((prev) =>
+                        prev.filter((p) => p.id !== item.id)
+                    );
+
+                    setDeletingItemId(null);
+
+                    toast.dismiss(toastId);
+
+                    toast.success("Item deleted successfully", {
+                        duration: 3000,
+                    });
+
+                } catch (error) {
+                    console.error("Failed to delete item:", error);
+
+                    // Restore normal row appearance
+                    setDeletingItemId(null);
+
+                    toast.error("Failed to delete item", {
+                        duration: 3000,
+                    });
+                }
+            },
+        });
+    };
     // ========================================================
     // LOAD INVENTORY
     // ========================================================
@@ -1497,8 +1544,8 @@ export default function InventoryPage() {
                                                         danger
                                                         title="Delete"
                                                         onClick={() =>
-                                                            deleteItem(
-                                                                item.id
+                                                            handleDelete(
+                                                                item
                                                             )
                                                         }
                                                     >

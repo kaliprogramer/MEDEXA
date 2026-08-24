@@ -20,7 +20,9 @@ import {
   X,
   LogOut,
   Brain,
-  Droplet
+  Droplet,
+  BookOpen,
+  BarChart3
 } from "lucide-react";
 
 const predictionItems = [
@@ -76,6 +78,19 @@ const otherItems = [
     name: "Help & Support",
     href: "/dashboard/help",
     icon: HelpCircle,
+  },
+];
+
+const apiItems = [
+  {
+    name: "Documentation",
+    href: "/dashboard/api/docs",
+    icon: BookOpen,
+  },
+  {
+    name: "Usage & Analytics",
+    href: "/dashboard/api/usage",
+    icon: BarChart3,
   },
 ];
 
@@ -270,6 +285,38 @@ export default function Sidebar() {
             </p>
 
             {otherItems.map((item) => {
+              const Icon = item.icon;
+
+              const active =
+                  pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
+
+              return (
+                  <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={closeSidebar}
+                      className={`
+                  mb-1 flex items-center gap-3 rounded-lg
+                  px-4 py-3 text-sm transition
+                  ${
+                          active
+                              ? "bg-blue-600 text-white"
+                              : "text-slate-300 hover:bg-slate-800"
+                      }
+                `}
+                  >
+                    <Icon size={19} />
+                    {item.name}
+                  </Link>
+              );
+            })}
+            {/* API */}
+            <p className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              API KEY
+            </p>
+
+            {apiItems.map((item) => {
               const Icon = item.icon;
 
               const active =
