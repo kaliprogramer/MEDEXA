@@ -37,7 +37,17 @@ import {
 
 import { useAuth } from "@/context/AuthContext";
 
-
+import {
+    get_Totalpatients,
+    get_Totaldoctors,
+    get_OutOfStockTotal,
+    get_StockTotal,
+    get_patientAnalytics,
+    get_genderanalytic,
+    get_stockanalytic,
+    get_lowstock,
+    get_recentpatients
+} from "@/app/lib/api/analytic_api";
 // ============================================================
 // TYPES
 // ============================================================
@@ -70,29 +80,8 @@ type Doctor = {
 // Replace these with your Django API data later.
 // ============================================================
 
-const patientAnalytics = [
-    { month: "Jan", patients: 42 },
-    { month: "Feb", patients: 58 },
-    { month: "Mar", patients: 51 },
-    { month: "Apr", patients: 74 },
-    { month: "May", patients: 89 },
-    { month: "Jun", patients: 96 },
-    { month: "Jul", patients: 112 },
-    { month: "Aug", patients: 128 },
-];
 
-const genderData = [
-    { name: "Male", value: 54 },
-    { name: "Female", value: 43 },
-    { name: "Other", value: 3 },
-];
 
-const inventoryData = [
-    { name: "Medicines", stock: 420 },
-    { name: "Equipment", stock: 185 },
-    { name: "Surgical", stock: 270 },
-    { name: "Supplies", stock: 340 },
-];
 
 const recentPatients: Patient[] = [
     {
@@ -125,26 +114,6 @@ const recentPatients: Patient[] = [
     },
 ];
 
-const lowStockItems: InventoryItem[] = [
-    {
-        id: 1,
-        name: "Paracetamol",
-        quantity: 8,
-        item_type: "Medicine",
-    },
-    {
-        id: 2,
-        name: "Surgical Gloves",
-        quantity: 12,
-        item_type: "Supplies",
-    },
-    {
-        id: 3,
-        name: "IV Cannula",
-        quantity: 6,
-        item_type: "Equipment",
-    },
-];
 
 
 // ============================================================
@@ -153,15 +122,148 @@ const lowStockItems: InventoryItem[] = [
 
 export default function DashboardBody() {
     const { user } = useAuth();
-
+    const [totalPatientNumber,settotalPatientNumber] = useState("")
+    const [totalDoctorNumber,settotalDoctorNumber] = useState("")
+    const [patientAnalytics,setpatientAnalytics] = useState([])
     const [username, setUsername] = useState("Doctor");
+    const [genderData,setgenderData] = useState([])
+    const [inventoryData,setinventoryData] = useState([])
+    const [lowStockItems,setlowStockItems] = useState([])
+    const [recentPatients,setrecentPatients] = useState([])
+    useEffect(() => {
+        const fetchrecentPatients = async () => {
+            try {
+                const data = await get_recentpatients();
+                setrecentPatients(data);
+            } catch (error) {
+                console.error("Failed to fetch stock analytics:", error);
+            }
+        };
 
+        fetchrecentPatients();
+    },[]);
+    useEffect(() => {
+        const fetchlowstock = async () => {
+            try {
+                const data = await get_lowstock();
+                setlowStockItems(data);
+            } catch (error) {
+                console.error("Failed to fetch stock analytics:", error);
+            }
+        };
+
+        fetchlowstock();
+    },[]);
     useEffect(() => {
         if (user?.username) {
             setUsername(user.username);
         }
     }, [user]);
+    useEffect(() => {
+        const fetchTotalPatients = async () => {
+            try {
+                const data = await get_Totalpatients();
 
+                settotalPatientNumber(data);
+                console.log(data);
+            } catch (error) {
+                console.error("Failed to fetch total patients:", error);
+            }
+        };
+
+        fetchTotalPatients();
+    }, []);
+
+    useEffect(() => {
+        const fetchTotalDoctors = async () => {
+            try {
+                const data = await get_Totaldoctors();
+
+                settotalDoctorNumber(data);
+                console.log(data);
+            } catch (error) {
+                console.error("Failed to fetch total patients:", error);
+            }
+        };
+
+        fetchTotalDoctors()
+    }, []);
+
+
+
+    const [outOfStockTotal, setOutOfStockTotal] = useState(0);
+
+    useEffect(() => {
+        const fetchOutOfStock = async () => {
+            try {
+                const data = await get_OutOfStockTotal();
+                setOutOfStockTotal(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchOutOfStock();
+    }, []);
+
+
+
+
+    const [StockTotal, setStockTotal] = useState(0);
+
+    useEffect(() => {
+        const fetchStock = async () => {
+            try {
+                const data = await get_StockTotal();
+                setStockTotal(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchStock();
+    }, []);
+
+
+    useEffect(() => {
+        const fetchStock = async () => {
+            try {
+                const data = await get_patientAnalytics();
+                setpatientAnalytics(data);
+            } catch (error) {
+
+                console.error(error);
+            }
+        };
+
+        fetchStock();
+    }, []);
+
+        useEffect(() => {
+            const fetchgender = async () => {
+                try {
+                    const data = await get_genderanalytic();
+                    setgenderData(data);
+                } catch (error) {
+
+                    console.error(error);
+                }
+            };
+
+            fetchgender();
+    }, []);
+    useEffect(() => {
+        const fetchStockAnalytics = async () => {
+            try {
+                const data = await get_stockanalytic();
+                setinventoryData(data);
+            } catch (error) {
+                console.error("Failed to fetch stock analytics:", error);
+            }
+        };
+
+        fetchStockAnalytics();
+    }, []);
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
 
@@ -210,7 +312,7 @@ export default function DashboardBody() {
 
                 <StatCard
                     title="Total Patients"
-                    value="184"
+                    value={totalPatientNumber}
                     description="+12 this month"
                     icon={<Users size={20} />}
                     iconStyle="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
@@ -219,7 +321,7 @@ export default function DashboardBody() {
 
                 <StatCard
                     title="Total Doctors"
-                    value="24"
+                    value={totalDoctorNumber}
                     description="Active medical staff"
                     icon={<Stethoscope size={20} />}
                     iconStyle="bg-violet-50 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400"
@@ -228,7 +330,7 @@ export default function DashboardBody() {
 
                 <StatCard
                     title="Inventory Items"
-                    value="1,248"
+                    value={StockTotal}
                     description="Across all categories"
                     icon={<Package size={20} />}
                     iconStyle="bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
@@ -237,7 +339,7 @@ export default function DashboardBody() {
 
                 <StatCard
                     title="Low Stock"
-                    value="12"
+                    value={outOfStockTotal}
                     description="Items need attention"
                     icon={<AlertTriangle size={20} />}
                     iconStyle="bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400"
@@ -720,9 +822,7 @@ export default function DashboardBody() {
                                     Phone
                                 </th>
 
-                                <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-                                    Action
-                                </th>
+
 
                             </tr>
 
@@ -770,16 +870,6 @@ export default function DashboardBody() {
                                         {patient.phone || "-"}
                                     </td>
 
-                                    <td className="px-5 py-4 text-right">
-
-                                        <Link
-                                            href={`/dashboard/patients/${patient.id}`}
-                                            className="inline-flex rounded-lg p-2 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
-                                        >
-                                            <ArrowRight size={15} />
-                                        </Link>
-
-                                    </td>
 
                                 </tr>
 

@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = process.env.NEXT_PUBLIC_FASTAPI_API_URL;
 
 export async function predictCKD(
     data: Record<string, number>
@@ -7,7 +7,7 @@ export async function predictCKD(
         `${API_URL}/chronic-kidney/predict/`,
         {
             method: "POST",
-
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },

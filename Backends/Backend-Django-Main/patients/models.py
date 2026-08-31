@@ -126,3 +126,14 @@ class Patient(models.Model):
         return f"{self.patient_id} - {self.first_name} {self.last_name}"
 
 
+class MonthlyPatientAnalytics(models.Model):
+    hospital = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    month = models.DateField()
+    patients = models.IntegerField(default=0)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["hospital", "month"],
+                name="unique_organization_month"
+            )
+        ]

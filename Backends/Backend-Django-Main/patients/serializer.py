@@ -1,5 +1,13 @@
 from rest_framework import serializers
-from .models import Patient
+from .models import Patient,MonthlyPatientAnalytics
+
+class MonthlyPatientAnalyticsSerializer(serializers.ModelSerializer):
+
+    month = serializers.DateField(format="%b")
+
+    class Meta:
+        model = MonthlyPatientAnalytics
+        fields = ["month", "patients"]
 
 class PatientSerializer(serializers.ModelSerializer):
 

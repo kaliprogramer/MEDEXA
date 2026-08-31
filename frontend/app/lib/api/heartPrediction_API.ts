@@ -1,6 +1,7 @@
 // app/lib/api/heartPrediction_API.ts
 
 export interface HeartFailureInput {
+    name:string;
     age: number;
     anaemia: number;
     creatinine_phosphokinase: number;
@@ -23,15 +24,15 @@ export interface HeartFailurePrediction {
 
 // IMPORTANT: Update this to match your actual API endpoint
 // If your FastAPI backend is running on port 8000 with a different endpoint path
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_FASTAPI_API_URL;
 
 export async function predictHeartFailure(data: HeartFailureInput): Promise<HeartFailurePrediction> {
     try {
         // Try common FastAPI endpoints
         const endpoints = [
-            `${API_BASE_URL}/heartdisease/predict`,
+            `${API_BASE_URL}/heartdisease/predict/`,
         ];
-
+        console.log(endpoints)
         let lastError: Error | null = null;
 
         // Try each endpoint
@@ -39,6 +40,7 @@ export async function predictHeartFailure(data: HeartFailureInput): Promise<Hear
             try {
                 const response = await fetch(endpoint, {
                     method: 'POST',
+                    credentials:"include",
                     headers: {
                         'Content-Type': 'application/json',
                     },

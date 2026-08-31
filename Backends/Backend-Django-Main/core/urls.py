@@ -10,6 +10,8 @@ urlpatterns = [
     path('api/patients/', include('patients.urls')),
     path('api/doctors/', include('doctors.urls')),
     path('api/inventory/', include('inventory.urls')),
+    path('api/fastapi/', include('fastapiconnection.urls')),
+    path('api/report/',include('report.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(

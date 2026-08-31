@@ -23,6 +23,7 @@ import { predictCKD } from "@/app/lib/api/ckdPrediction_API";
 type PredictionState = "idle" | "loading" | "result";
 
 type CKDFormData = {
+    name: string;
     age: string;
     bp: string;
     sg: string;
@@ -55,6 +56,7 @@ type CKDPredictionResponse = {
 };
 
 const INITIAL_FORM_DATA: CKDFormData = {
+    name: "",
     age: "",
     bp: "",
     sg: "",
@@ -82,6 +84,12 @@ const INITIAL_FORM_DATA: CKDFormData = {
 };
 
 const fields = [
+    {
+        label: "Name",
+        name: "name",
+        placeholder: "Kiran K.C",
+        type: "text",
+    },
     {
         label: "Age",
         name: "age",
@@ -283,6 +291,9 @@ export default function ChronicKidneyDiseaseBody() {
     const handlePredict = async () => {
         setError(null);
 
+        // Extract name from formData
+        const name = formData.name;
+
         const age = Number(formData.age);
 
         if (!Number.isFinite(age) || age <= 0) {
@@ -290,11 +301,17 @@ export default function ChronicKidneyDiseaseBody() {
             return;
         }
 
+        // Validate name is not empty
+        if (!name || !name.trim()) {
+            setError("Please enter the patient's name.");
+            return;
+        }
+
         const requiredFields = Object.entries(formData);
 
         const missing = requiredFields.some(
             ([key, value]) =>
-                key !== "age" && !value
+                key !== "age" && key !== "name" && !value
         );
 
         if (missing) {
@@ -321,6 +338,7 @@ export default function ChronicKidneyDiseaseBody() {
             value === "Present" ? 1 : 0;
 
         const payload = {
+            name,
             age,
             bp: Number(formData.bp),
             sg: Number(formData.sg),
@@ -1357,8 +1375,7 @@ function AnalysisItem({
 }
 
 /* =========================================================
-   INDICATOR
-========================================================= */
+   INDICATOR========================================================= */
 
 function Indicator({
                        icon,

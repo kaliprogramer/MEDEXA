@@ -69,6 +69,10 @@ const otherItems = [
     href: "/dashboard/inventory",
     icon: FileText,
   },
+
+];
+
+const apiItems = [
   {
     name: "Settings",
     href: "/dashboard/settings",
@@ -79,19 +83,7 @@ const otherItems = [
     href: "/dashboard/help",
     icon: HelpCircle,
   },
-];
 
-const apiItems = [
-  {
-    name: "Documentation",
-    href: "/dashboard/api/docs",
-    icon: BookOpen,
-  },
-  {
-    name: "Usage & Analytics",
-    href: "/dashboard/api/usage",
-    icon: BarChart3,
-  },
 ];
 
 export default function Sidebar() {
@@ -313,7 +305,7 @@ export default function Sidebar() {
             })}
             {/* API */}
             <p className="mb-2 mt-6 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              API KEY
+              Setting
             </p>
 
             {apiItems.map((item) => {

@@ -28,6 +28,7 @@ import {
 type PredictionState = "idle" | "loading" | "result";
 
 type FormData = {
+    name: string;
     age: number;
     sex: "Male" | "Female";
     anaemia: boolean;
@@ -44,6 +45,7 @@ type FormData = {
 type IndicatorType = "danger" | "warning" | "success";
 
 const INITIAL_FORM_DATA: FormData = {
+    name:"kiran kc",
     age: 50,
     sex: "Male",
     anaemia: false,
@@ -58,6 +60,12 @@ const INITIAL_FORM_DATA: FormData = {
 };
 
 const fields = [
+    {
+        label: "Name",
+        name: "name",
+        placeholder: "Ram",
+        type: "text",
+    },
     {
         label: "Age",
         name: "age",
@@ -203,7 +211,11 @@ export default function HeartDiseaseBody() {
                 } as FormData;
             }
 
-            return previous;
+            // Add default fallback for text fields (like "name"):
+            return {
+                ...previous,
+                [name]: value,
+            };
         });
     };
 
@@ -214,6 +226,7 @@ export default function HeartDiseaseBody() {
             setPredictionState("loading");
 
             const payload: HeartFailureInput = {
+                name: formData.name,
                 age: Number(formData.age),
                 anaemia: formData.anaemia ? 1 : 0,
                 creatinine_phosphokinase: Number(
@@ -343,6 +356,18 @@ export default function HeartDiseaseBody() {
                                         : "NO"
                                     : rawValue;
 
+                            // Define which fields should be numeric
+                            const numericFields = [
+                                "age",
+                                "creatininePhosphokinase",
+                                "ejectionFraction",
+                                "platelets",
+                                "serumCreatinine",
+                                "serumSodium",
+                            ];
+
+                            const isNumericField = numericFields.includes(field.name);
+
                             return (
                                 <div key={field.name}>
                                     <label className="mb-1.5 block text-xs font-medium text-slate-700 dark:text-slate-300">
@@ -370,7 +395,7 @@ export default function HeartDiseaseBody() {
                                     ) : (
                                         <input
                                             name={field.name}
-                                            type="number"
+                                            type={isNumericField ? "number" : "text"}
                                             min={field.name === "age" ? 0 : undefined}
                                             value={String(value)}
                                             placeholder={field.placeholder}

@@ -3,6 +3,7 @@
 // app/lib/api/diabetesPrediction_API.ts
 
 export interface DiabetesDiseaseInput {
+    name: string;
     age: number;
     gender: number;
     polyuria: number;
@@ -29,16 +30,17 @@ export interface DiabetesDiseasePrediction {
 }
 
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    process.env.NEXT_PUBLIC_FASTAPI_API_URL;
 
 export async function predictDiabetes(
     data: DiabetesDiseaseInput
 ): Promise<DiabetesDiseasePrediction> {
     try {
-        const endpoint = `${API_BASE_URL}/diabetes/predict`;
+        const endpoint = `${API_BASE_URL}/diabetes/predict/`;
 
         const response = await fetch(endpoint, {
             method: 'POST',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
             },

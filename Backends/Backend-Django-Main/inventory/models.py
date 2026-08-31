@@ -137,4 +137,3 @@ class InventoryItem(models.Model):
                 self.item_code = f"ITEM-{uuid.uuid4().hex[:8].upper()}"
     
             super().save(*args, **kwargs)
-    

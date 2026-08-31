@@ -36,7 +36,7 @@ export interface StrokePrediction {
 // =====================================================
 
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    process.env.NEXT_PUBLIC_FASTAPI_API_URL;
 
 
 // =====================================================
@@ -99,12 +99,12 @@ export async function predictStroke(
     try {
 
         const endpoint =
-            `${API_BASE_URL}/stroke/predict`;
+            `${API_BASE_URL}/stroke/predict/`;
 
 
         const response = await fetch(endpoint, {
             method: "POST",
-
+            credentials:"include",
             headers: {
                 "Content-Type": "application/json",
             },

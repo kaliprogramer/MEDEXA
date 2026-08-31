@@ -1,8 +1,21 @@
 from django.urls import path
-from .views import PatientViewSet
-import rest_framework.routers as routers
+from rest_framework.routers import DefaultRouter
 
-router = routers.DefaultRouter()
+from .views import PatientViewSet, MonthlyPatientAnalyticsView,PatientGenderAnalyticsView,RecentPatients
+
+router = DefaultRouter()
+
 router.register(r'', PatientViewSet, basename='patient')
 
-urlpatterns = router.urls
+
+urlpatterns = [
+    path(
+        'monthlyanalytic/',
+        MonthlyPatientAnalyticsView.as_view(),
+        name='monthly-analytic'
+    ),
+    path('genderanalytic/',PatientGenderAnalyticsView.as_view(),name='gender-analytic'),
+    path('recentpatients/',RecentPatients.as_view(),name='recentpatients')
+]
+
+urlpatterns += router.urls

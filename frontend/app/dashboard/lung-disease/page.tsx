@@ -18,6 +18,7 @@ import {
     ImageIcon,
     Brain,
     Eye,
+    User,
 } from "lucide-react";
 
 
@@ -40,7 +41,7 @@ interface LungPrediction {
     // Grad-CAM image returned by FastAPI
     // Example:
     // data:image/png;base64,iVBORw0KGgo...
-    gradcam_image?: string | null;
+    gradcam?: string | null;
 }
 
 
@@ -75,7 +76,7 @@ const recentPredictions = [
 // =====================================================
 
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    process.env.NEXT_PUBLIC_FASTAPI_API_URL;
 
 
 // =====================================================
@@ -89,6 +90,9 @@ export default function LungDiseaseBody() {
 
     const [imagePreview, setImagePreview] =
         useState<string | null>(null);
+
+    const [patientName, setPatientName] =
+        useState<string>("");
 
     const [predictionState, setPredictionState] =
         useState<PredictionState>("idle");
@@ -197,6 +201,7 @@ export default function LungDiseaseBody() {
     const handleReset = () => {
 
         handleRemoveImage();
+        setPatientName("");
 
     };
 
@@ -216,6 +221,15 @@ export default function LungDiseaseBody() {
             return;
         }
 
+        if (!patientName.trim()) {
+
+            setError(
+                "Please enter the patient's name."
+            );
+
+            return;
+        }
+
 
         setPredictionState("loading");
         setError(null);
@@ -227,22 +241,28 @@ export default function LungDiseaseBody() {
             const formData = new FormData();
 
             formData.append(
-                "file",
+                "image",
                 imageFile
+            );
+
+            // Send patient name to API
+            formData.append(
+                "name",
+                patientName.trim()
             );
 
 
             const response = await fetch(
-                `${API_BASE_URL}/lung-disease/predict`,
+                `${API_BASE_URL}/lung-disease/predict/`,
                 {
                     method: "POST",
+                    credentials:"include",
                     body: formData,
                 }
             );
 
 
             const result = await response.json();
-
 
             if (!response.ok) {
 
@@ -389,6 +409,44 @@ export default function LungDiseaseBody() {
 
 
                     {/* ================================================= */}
+                    {/* PATIENT NAME INPUT */}
+                    {/* ================================================= */}
+
+                    <div className="mb-5">
+
+                        <label
+                            htmlFor="patient-name"
+                            className="block text-xs font-medium text-slate-700 dark:text-slate-300"
+                        >
+
+                            Patient Name
+
+                        </label>
+
+
+                        <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 dark:border-slate-700 dark:bg-slate-900">
+
+                            <User
+                                size={17}
+                                className="text-slate-400 dark:text-slate-500"
+                            />
+
+
+                            <input
+                                id="patient-name"
+                                type="text"
+                                value={patientName}
+                                onChange={(e) => setPatientName(e.target.value)}
+                                placeholder="Enter patient name"
+                                className="w-full border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-0 dark:text-white dark:placeholder:text-slate-500"
+                            />
+
+                        </div>
+
+                    </div>
+
+
+                    {/* ================================================= */}
                     {/* UPLOAD */}
                     {/* ================================================= */}
 
@@ -398,7 +456,7 @@ export default function LungDiseaseBody() {
                             htmlFor="lung-image"
                             className="
                                 flex
-                                min-h-[360px]
+                                min-h-[300px]
                                 cursor-pointer
                                 flex-col
                                 items-center
@@ -470,12 +528,12 @@ export default function LungDiseaseBody() {
 
                         <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-900">
 
-                            <div className="flex min-h-[360px] items-center justify-center p-3">
+                            <div className="flex min-h-[300px] items-center justify-center p-3">
 
                                 <img
                                     src={imagePreview}
                                     alt="Uploaded chest X-ray"
-                                    className="max-h-[500px] w-full rounded-lg object-contain"
+                                    className="max-h-[400px] w-full rounded-lg object-contain"
                                 />
 
                             </div>
@@ -618,6 +676,7 @@ export default function LungDiseaseBody() {
                             onClick={handlePredict}
                             disabled={
                                 !imageFile ||
+                                !patientName.trim() ||
                                 predictionState === "loading"
                             }
                             className="
@@ -937,7 +996,7 @@ function ReadyState() {
 
                 <p className="mt-2 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400">
 
-                    Upload a chest X-ray image on the left and click{" "}
+                    Enter the patient's name, upload a chest X-ray image on the left and click{" "}
 
                     <strong className="font-semibold text-slate-700 dark:text-slate-300">
 
@@ -1287,7 +1346,9 @@ function PredictionResult({
                             <div className="overflow-hidden rounded-lg border border-red-200 bg-black dark:border-red-900">
 
                                 <img
-                                    src={`data:image/png;base64,${prediction.gradcam}`}
+                                    src={prediction.gradcam.startsWith('data:image')
+                                        ? prediction.gradcam
+                                        : `data:image/png;base64,${prediction.gradcam}`}
                                     alt={`Grad-CAM attention map for ${prediction.prediction}`}
                                     className="aspect-square w-full object-contain"
                                 />

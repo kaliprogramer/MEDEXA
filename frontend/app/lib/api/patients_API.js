@@ -8,7 +8,9 @@ export async function get_patients(page=1) {
     if (!response.ok) {
         toast.error("Api problem in patient API to get data")
     }
-    return response.json();
+    const data = response.json();
+    console.log(data);
+    return data;
 };
 
 

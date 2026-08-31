@@ -22,7 +22,8 @@ import { predictDiabetes } from "@/app/lib/api/diabetesPrediction_API";
 type PredictionState = "idle" | "loading" | "result";
 
 type DiabetesFormData = {
-    age: string;
+    name: string;
+    age: number;
     gender: string;
     polyuria: string;
     polydipsia: string;
@@ -46,6 +47,7 @@ type DiabetesPredictionResponse = {
 };
 
 const INITIAL_FORM_DATA: DiabetesFormData = {
+    name:"",
     age: "",
     gender: "",
     polyuria: "",
@@ -65,6 +67,7 @@ const INITIAL_FORM_DATA: DiabetesFormData = {
 };
 
 const fields = [
+    { label: "Name", name: "name", placeholder: "Kiran K.C", type: "text" },
     { label: "Age", name: "age", placeholder: "Years", type: "number" },
     { label: "Gender", name: "gender", type: "select", options: ["Male", "Female"] },
     { label: "Polyuria", name: "polyuria", type: "select", options: ["Yes", "No"] },
@@ -124,6 +127,7 @@ export default function DiabetesDiseaseBody() {
         const binary = (value: string) => (value === "Yes" ? 1 : 0);
 
         const payload = {
+            name: formData.name,
             age,
             gender: formData.gender === "Male" ? 1 : 0,
             polyuria: binary(formData.polyuria),
