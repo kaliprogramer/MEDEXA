@@ -282,34 +282,6 @@ Response:
 
 ---
 
-## 📸 Screenshots
-
-### Dashboard
-
-<p align="center">
-  <img src="./assets/screenshots/dashboard.png" width="900" alt="MEDEXA Dashboard" />
-</p>
-
-### Patient Management
-
-<p align="center">
-  <img src="./assets/screenshots/patients.png" width="900" alt="MEDEXA Patient Management" />
-</p>
-
-### AI Prediction
-
-<p align="center">
-  <img src="./assets/screenshots/prediction.png" width="900" alt="MEDEXA AI Prediction" />
-</p>
-
-### Inventory
-
-<p align="center">
-  <img src="./assets/screenshots/inventory.png" width="900" alt="MEDEXA Inventory" />
-</p>
-
----
-
 ## 🎯 Engineering Focus
 
 MEDEXA is being developed to demonstrate practical engineering skills across multiple areas:
