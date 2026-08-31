@@ -2,7 +2,7 @@
 
 <p align="center">
   <img
-    src="Backends/Backend-Django-Main/video-demo/banner copy.svg"
+    src="Backends/Backend-Django-Main/video-demo/banner.svg"
     alt="MEDEXA - AI-Powered Hospital Management & Clinical Risk Prediction Platform"
     width="100%"
   />
