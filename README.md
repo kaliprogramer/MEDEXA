@@ -1,134 +1,25 @@
 # 🏥 MEDEXA
 
-### AI-Powered Hospital Management & Clinical Risk Prediction Platform
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400">
-  <defs>
-    <!-- Background Gradient -->
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0a0f1d" />
-      <stop offset="50%" stop-color="#0f172a" />
-      <stop offset="100%" stop-color="#050811" />
-    </linearGradient>
+<p align="center">
+  <img
+    src="./assets/medexa-banner.svg"
+    alt="MEDEXA - AI-Powered Hospital Management & Clinical Risk Prediction Platform"
+    width="100%"
+  />
+</p>
 
-    <!-- Brand Cyan-Green Gradient -->
-    <linearGradient id="brandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00a8ff" />
-      <stop offset="50%" stop-color="#00d2ff" />
-      <stop offset="100%" stop-color="#00ff88" />
-    </linearGradient>
+<p align="center">
+  <strong>AI-Powered Hospital Management & Clinical Risk Prediction Platform</strong>
+</p>
 
-    <!-- Glassmorphism Card Gradient -->
-    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.07" />
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
-    </linearGradient>
-
-    <!-- Card Border Gradient -->
-    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00d2ff" stop-opacity="0.4" />
-      <stop offset="100%" stop-color="#00ff88" stop-opacity="0.1" />
-    </linearGradient>
-
-    <!-- Glow Effect -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="12" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
-  </defs>
-
-  <!-- Base Background -->
-  <rect width="1280" height="400" fill="url(#bg)" />
-
-  <!-- Accent Glow Circles -->
-  <circle cx="1100" cy="80" r="180" fill="#00d2ff" opacity="0.08" filter="url(#glow)" />
-  <circle cx="200" cy="350" r="150" fill="#00ff88" opacity="0.05" filter="url(#glow)" />
-
-  <!-- Left Column: Branding & Value Proposition -->
-  <g transform="translate(60, 0)">
-    <!-- Logo Accent Arrow Element -->
-    <path d="M 0 75 Q 30 75, 45 45 T 90 25" fill="none" stroke="url(#brandGrad)" stroke-width="6" stroke-linecap="round" />
-    
-    <text x="0" y="110" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="46" fill="#ffffff" letter-spacing="2">MEDEXA</text>
-    <text x="0" y="135" font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="15" fill="url(#brandGrad)" letter-spacing="1">NEXT-GEN CLINICAL AI &amp; HEALTHCARE MANAGEMENT</text>
-    
-    <text x="0" y="180" font-family="'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="16" fill="#94a3b8">
-      Empowering clinicians with real-time, multi-modal diagnostic assistance 
-    </text>
-    <text x="0" y="202" font-family="'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="16" fill="#94a3b8">
-      and automated hospital workflow optimization.
-    </text>
-
-    <!-- Key Metrics / Highlights -->
-    <g transform="translate(0, 240)">
-      <!-- High Accuracy AI Tag -->
-      <rect x="0" y="0" width="140" height="38" rx="8" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1" />
-      <text x="15" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#00ff88">✓ Multi-Disease AI</text>
-
-      <!-- Secure Data Tag -->
-      <rect x="155" y="0" width="130" height="38" rx="8" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1" />
-      <text x="170" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#00d2ff">🛡️ Patient Data</text>
-
-      <!-- Inventory & Clinical Tag -->
-      <rect x="298" y="0" width="150" height="38" rx="8" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1" />
-      <text x="313" y="24" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#ffffff">📊 Inventory Hub</text>
-    </g>
-
-    <text x="0" y="340" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="500" fill="#64748b">
-      Built for Healthcare Professionals &bull; Powered by Deep Learning
-    </text>
-  </g>
-
-  <!-- Right Column: Featured Feature Cards -->
-  <!-- Card 1: Chest X-Ray AI Analysis (Recruiter Highlight) -->
-  <g transform="translate(560, 45)">
-    <rect width="320" height="145" rx="12" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1.5" />
-    <text x="20" y="35" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" fill="#ffffff">🫁 Lung &amp; X-Ray Vision AI</text>
-    <text x="20" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="12" fill="#64748b">Grad-CAM Heatmap Localization</text>
-    
-    <rect x="20" y="75" width="280" height="20" rx="4" fill="#0f172a" />
-    <rect x="20" y="75" width="280" height="20" rx="4" fill="url(#brandGrad)" opacity="0.85" />
-    <text x="120" y="89" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="11" fill="#0f172a">100.0% Confidence</text>
-    
-    <text x="20" y="122" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8">Identifies Tuberculosis, Pneumonia &amp; Lesions</text>
-  </g>
-
-  <!-- Card 2: Risk Prediction Suite (Technical Highlight) -->
-  <g transform="translate(900, 45)">
-    <rect width="320" height="145" rx="12" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1.5" />
-    <text x="20" y="35" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="16" fill="#ffffff">❤️ Cardiac &amp; Risk Analytics</text>
-    <text x="20" y="58" font-family="'Segoe UI', Roboto, sans-serif" font-weight="400" font-size="12" fill="#64748b">Heart, Stroke, Diabetes &amp; CKD</text>
-
-    <!-- Gauge Representation -->
-    <rect x="20" y="78" width="180" height="12" rx="6" fill="#1e293b" />
-    <rect x="20" y="78" width="40" height="12" rx="6" fill="#00ff88" />
-    <text x="210" y="89" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="12" fill="#00ff88">Low Risk (17.4%)</text>
-
-    <text x="20" y="122" font-family="'Segoe UI', Roboto, sans-serif" font-size="12" fill="#94a3b8">Real-time risk scoring from clinical metrics</text>
-  </g>
-
-  <!-- Card 3: Clinical Management Suite (Customer/Client Highlight) -->
-  <g transform="translate(560, 210)">
-    <rect width="660" height="145" rx="12" fill="url(#cardGrad)" stroke="url(#borderGrad)" stroke-width="1.5" />
-    <text x="25" y="40" font-family="'Segoe UI', Roboto, sans-serif" font-weight="700" font-size="18" fill="#ffffff">🏥 Integrated Hospital Management System</text>
-    <text x="25" y="65" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" fill="#94a3b8">Complete workflow support designed for clinics, doctors, and pharmacy inventory.</text>
-    
-    <!-- Mini Specs Grid -->
-    <g transform="translate(25, 85)">
-      <circle cx="10" cy="15" r="5" fill="#00d2ff" />
-      <text x="25" y="19" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#e2e8f0">Patient Records</text>
-
-      <circle cx="210" cy="15" r="5" fill="#00ff88" />
-      <text x="225" y="19" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#e2e8f0">Staff Management</text>
-
-      <circle cx="410" cy="15" r="5" fill="#a855f7" />
-      <text x="425" y="19" font-family="'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#e2e8f0">Medicine &amp; Low Stock Alerts</text>
-    </g>
-  </g>
-</svg>
-
-MEDEXA is a full-stack healthcare platform that combines **hospital management, clinical analytics, and AI-powered disease risk prediction** into a unified system.
-
-Built with **Next.js, Django REST Framework, PostgreSQL, Redis, and AI/ML inference services**, MEDEXA is designed around production-oriented concepts such as secure authentication, API security, rate limiting, analytics, scalable service architecture, and responsive clinical workflows.
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" />
+  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+</p>
 
 <p align="center">
   <strong>🏥 Hospital Management</strong> ·
@@ -142,272 +33,187 @@ Built with **Next.js, Django REST Framework, PostgreSQL, Redis, and AI/ML infere
 
 ## 🎥 Product Demo
 
-> **See MEDEXA in action:** dashboard → patient management → AI prediction → analytics → inventory → API workflow.
+<p align="center">
+  <img
+    src="./assets/medexa-demo.gif"
+    alt="MEDEXA Product Demo"
+    width="900"
+  />
+</p>
 
-<!-- Replace the URL below with your YouTube/Loom/demo video -->
+<p align="center">
+  <strong>MEDEXA in action</strong><br/>
+  Dashboard → Patient Management → AI Prediction → Analytics → Inventory → API Management
+</p>
 
-## 🎥 Product Demo
+### 🎬 Full Walkthrough
 
-<video
-  src="Backends/Backend-Django-Main/video-demo/medexa.mp4"
-  autoplay
-  muted
-  loop
-  playsinline
-  width="900">
-</video>
+> A complete product walkthrough demonstrating the major features and system architecture.
 
-**▶️ Watch the full product walkthrough**
-
----
-
-## 🚀 What is MEDEXA?
-
-MEDEXA is designed as more than a CRUD hospital application.
-
-The platform brings together three major systems:
-
-```text
-                    ┌─────────────────────────┐
-                    │        MEDEXA            │
-                    │ Healthcare Platform      │
-                    └────────────┬────────────┘
-                                 │
-              ┌──────────────────┼──────────────────┐
-              │                  │                  │
-              ▼                  ▼                  ▼
-       Hospital System       AI/ML System      Platform APIs
-              │                  │                  │
-       ┌──────┼──────┐      ┌────┴─────┐      ┌────┴─────┐
-       │      │      │      │          │      │          │
-    Patients Inventory Analytics   Prediction Security  Rate Limits
-       │      │      │      │          │      │          │
-       └──────┴──────┘      └──────────┘      └──────────┘
-```
-
-The objective is to demonstrate how modern **AI + full-stack engineering + backend architecture** can be combined into a practical healthcare product.
+**▶️ [Watch the full MEDEXA demo](./Backends/Backend-Django-Main/video-demo/medexa.mp4)**
 
 ---
 
-## ✨ Core Features
+## 🚀 Overview
 
-### 🏥 Hospital Management
+MEDEXA is a full-stack healthcare platform that combines **hospital management, clinical analytics, and AI-powered disease risk prediction** into a unified system.
 
-* Patient registration and management
-* Patient profile and medical information
-* Add, update, view and delete patient records
-* Doctor-focused dashboard
-* Hospital inventory management
-* Medicine and stock tracking
-* Low-stock and out-of-stock monitoring
-* Room availability management
-* Recent patient activity
+The platform is designed around production-oriented engineering principles including secure authentication, protected APIs, API-key management, Redis-based rate limiting, analytics, service separation, and AI inference.
 
-### 🤖 AI & Clinical Intelligence
+Rather than being only a CRUD application, MEDEXA explores how **AI, backend engineering, frontend architecture, security, databases, caching, and DevOps** can work together in a real-world healthcare platform.
 
-MEDEXA integrates machine-learning models for healthcare risk assessment, including:
+---
+
+## ✨ Core Capabilities
+
+| Module                     | Capabilities                                                       |
+| -------------------------- | ------------------------------------------------------------------ |
+| 🏥 **Hospital Management** | Patients, doctors, inventory, rooms and clinical workflows         |
+| 🤖 **AI/ML**               | Heart, stroke, diabetes, CKD and lung disease prediction           |
+| 📊 **Analytics**           | Patient trends, risk analytics, inventory statistics and KPIs      |
+| 🔐 **Security**            | JWT, HttpOnly cookies, API keys, permissions and protected APIs    |
+| ⚡ **API Platform**         | External AI prediction APIs with authentication and usage tracking |
+| 🚦 **Rate Limiting**       | Redis-backed daily API usage limits                                |
+| 🗄️ **Data Layer**         | PostgreSQL-ready architecture with structured REST APIs            |
+| 🐳 **Infrastructure**      | Docker and CI/CD-oriented architecture                             |
+
+---
+
+## 🧠 AI & Clinical Intelligence
+
+MEDEXA integrates multiple machine-learning models for clinical risk assessment and image-based prediction.
+
+### Current AI Modules
 
 * ❤️ Heart disease risk prediction
 * 🧠 Stroke risk prediction
 * 🩸 Diabetes risk prediction
 * 🫘 Chronic kidney disease prediction
 * 🫁 Lung disease image classification
-* 📈 Probability-based prediction results
-* 🔍 Explainable AI support for model interpretation
+* 📈 Probability-based prediction
+* 🔍 Explainability and model interpretation
 
-> **Important:** AI predictions are intended as decision-support functionality and are not a replacement for professional medical diagnosis.
+> ⚠️ **Medical Disclaimer:** AI predictions are intended for educational and decision-support purposes only. They are not a substitute for professional medical diagnosis or treatment.
 
-### 📊 Analytics
+---
 
-The platform provides analytics for understanding hospital activity:
+## 🏗️ System Architecture
 
-* Patient growth analytics
-* Monthly patient statistics
-* Gender distribution
-* Inventory analytics
-* Low-stock monitoring
-* Prediction activity
-* Dashboard-level KPIs
-* Historical data visualization
+```text
+                         ┌─────────────────────┐
+                         │       MEDEXA        │
+                         │  Healthcare Platform │
+                         └──────────┬──────────┘
+                                    │
+                         ┌──────────▼──────────┐
+                         │      Next.js        │
+                         │  Web Application    │
+                         └──────────┬──────────┘
+                                    │
+                              HTTPS / REST
+                                    │
+                         ┌──────────▼──────────┐
+                         │ Django REST API     │
+                         │                      │
+                         │ Authentication       │
+                         │ Patients             │
+                         │ Inventory             │
+                         │ Analytics             │
+                         │ API Management       │
+                         └──────┬───────┬───────┘
+                                │       │
+                    ┌───────────┘       └────────────┐
+                    ▼                                ▼
+             ┌─────────────┐                  ┌─────────────┐
+             │    Redis    │                  │ PostgreSQL  │
+             │             │                  │             │
+             │ Rate Limits │                  │ Application │
+             │ Caching     │                  │ Data        │
+             └─────────────┘                  └─────────────┘
+                                │
+                                ▼
+                       ┌─────────────────┐
+                       │ AI Inference    │
+                       │ Service         │
+                       ├─────────────────┤
+                       │ Heart           │
+                       │ Stroke          │
+                       │ Diabetes        │
+                       │ CKD             │
+                       │ Lung CNN        │
+                       └─────────────────┘
+```
 
-### 🔐 Security
+---
 
-Security is treated as a core part of the application architecture:
-
-* JWT authentication
-* HttpOnly cookie-based authentication
-* Protected API endpoints
-* Role-based access control
-* API key authentication
-* API key hashing
-* API key expiration
-* API key activation/deactivation
-* Request tracking
-* Rate limiting
-* Redis-backed usage control
-* CORS protection
-* CSRF protection
-
-### ⚡ API Platform
-
-MEDEXA also includes an API-oriented architecture for exposing AI prediction capabilities.
-
-Example architecture:
+## 🔐 Security Architecture
 
 ```text
 Client
-  │
-  │ Bearer API Key
-  ▼
-Django API Gateway
-  │
-  ├── Authentication
-  ├── Permission Checks
-  ├── Rate Limiting
-  ├── Usage Tracking
-  └── Request Logging
-          │
-          ▼
-     AI Inference API
-          │
-          ▼
-     ML Prediction
-```
-
-This allows the AI functionality to be consumed independently from the hospital management interface.
-
----
-
-## 🧠 AI Architecture
-
-The AI layer is separated from the main application to keep responsibilities clear.
-
-```text
-Next.js
    │
-   │ HTTPS / REST
    ▼
-Django REST Framework
+Authentication
    │
-   ├── Authentication
-   ├── Users
-   ├── Patients
-   ├── Inventory
-   ├── Analytics
-   ├── API Keys
-   ├── Rate Limiting
-   │
-   └──────────────► AI Inference Service
-                         │
-                         ├── Heart Disease Model
-                         ├── Stroke Model
-                         ├── Diabetes Model
-                         ├── CKD Model
-                         └── Lung Disease CNN
+   ├── JWT
+   └── HttpOnly Cookies
+          │
+          ▼
+     Django API
+          │
+          ├── Permission Validation
+          │
+          ├── API Key Authentication
+          │
+          ├── Subscription Validation
+          │
+          ├── Redis Rate Limiting
+          │
+          └── Request Logging
+                    │
+                    ▼
+              AI Inference
+                    │
+                    ▼
+                 Response
 ```
-
-This separation makes the system easier to maintain and allows the AI inference layer to evolve independently from the core application.
 
 ---
 
-## 🛠️ Technology Stack
+## 📊 Analytics
 
-### Frontend
+MEDEXA provides a centralized analytics dashboard for monitoring hospital activity.
 
-* **Next.js**
-* **React**
-* **TypeScript**
-* **Tailwind CSS**
-* **shadcn/ui**
-* **Lucide React**
-* **Recharts**
+### Dashboard Metrics
 
-### Backend
-
-* **Python**
-* **Django**
-* **Django REST Framework**
-* **JWT Authentication**
-* **RESTful APIs**
-
-### AI / Machine Learning
-
-* **PyTorch**
-* **Transformers**
-* **scikit-learn**
-* **CNN-based image classification**
-* **SHAP / LIME**
-* **Joblib**
-
-### Infrastructure
-
-* **PostgreSQL**
-* **Redis**
-* **Docker**
-* **Git / GitHub**
-* **CI/CD**
+* Patient growth
+* Monthly patient statistics
+* Gender distribution
+* Prediction activity
+* Risk overview
+* Inventory value
+* Low-stock items
+* Out-of-stock items
+* Recent patient activity
+* AI system status
 
 ---
 
-## 🏗️ Engineering Highlights
+## 🔑 API Management
 
-MEDEXA focuses on real-world engineering concepts rather than only building UI screens.
+MEDEXA includes an API management layer for exposing AI prediction capabilities to external applications.
 
-### Authentication Flow
+### API Security
 
-```text
-Login
-  ↓
-Django Authentication
-  ↓
-JWT Access + Refresh Tokens
-  ↓
-HttpOnly Cookies
-  ↓
-Protected API Requests
-```
+* Bearer API keys
+* Hashed API-key storage
+* API-key expiration
+* Key activation/deactivation
+* Request tracking
+* Usage analytics
+* Subscription-based limits
+* Redis-backed rate limiting
 
-### API Security Flow
-
-```text
-Request
-  ↓
-API Key Authentication
-  ↓
-Permission Validation
-  ↓
-Subscription Check
-  ↓
-Redis Rate Limit
-  ↓
-Request Logging
-  ↓
-AI Inference
-  ↓
-Response
-```
-
-### Redis Usage
-
-Redis is used for fast, temporary application state such as:
-
-* Daily API request counters
-* Rate limiting
-* Usage tracking
-* Cached application data
-
-Example subscription limits:
-
-| Plan | Daily API Requests |
-| ---- | -----------------: |
-| Free |                100 |
-| Pro  |             10,000 |
-
----
-
-## 📡 API Example
-
-Example AI prediction request:
+### Example
 
 ```http
 POST /api/v1/predictions/heart/
@@ -415,7 +221,7 @@ Authorization: Bearer drk_live_xxxxxxxxx
 Content-Type: application/json
 ```
 
-Example response:
+Response:
 
 ```json
 {
@@ -427,24 +233,44 @@ Example response:
 }
 ```
 
-The API layer is designed so that external applications can consume the prediction services without directly interacting with the internal ML implementation.
-
 ---
 
-## 📊 Dashboard
+## 🛠️ Technology Stack
 
-The dashboard is designed around actionable clinical and operational information rather than simply displaying database records.
+### Frontend
 
-It provides:
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* shadcn/ui
+* Lucide React
+* Recharts
 
-* Patient statistics
-* Monthly analytics
-* Risk prediction overview
-* Inventory status
-* Low-stock alerts
-* Recent patients
-* AI system status
-* Hospital activity metrics
+### Backend
+
+* Python
+* Django
+* Django REST Framework
+* JWT Authentication
+* REST APIs
+
+### AI / Machine Learning
+
+* PyTorch
+* scikit-learn
+* Transformers
+* CNN-based image classification
+* SHAP / LIME
+* Joblib
+
+### Infrastructure
+
+* PostgreSQL
+* Redis
+* Docker
+* Git
+* GitHub Actions / CI/CD
 
 ---
 
@@ -452,72 +278,48 @@ It provides:
 
 ### Dashboard
 
-<!-- Add dashboard screenshot here -->
+<p align="center">
+  <img src="./assets/screenshots/dashboard.png" width="900" alt="MEDEXA Dashboard" />
+</p>
 
 ### Patient Management
 
-<!-- Add patient management screenshot here -->
+<p align="center">
+  <img src="./assets/screenshots/patients.png" width="900" alt="MEDEXA Patient Management" />
+</p>
 
 ### AI Prediction
 
-<!-- Add AI prediction screenshot here -->
+<p align="center">
+  <img src="./assets/screenshots/prediction.png" width="900" alt="MEDEXA AI Prediction" />
+</p>
 
 ### Inventory
 
-<!-- Add inventory screenshot here -->
+<p align="center">
+  <img src="./assets/screenshots/inventory.png" width="900" alt="MEDEXA Inventory" />
+</p>
 
 ---
 
-## 📁 Project Architecture
+## 🎯 Engineering Focus
 
-```text
-MEDEXA/
-│
-├── frontend/
-│   ├── app/
-│   ├── components/
-│   ├── services/
-│   └── ...
-│
-├── backend/
-│   ├── authentication/
-│   ├── patients/
-│   ├── inventory/
-│   ├── analytics/
-│   ├── api_management/
-│   └── ...
-│
-├── ai-service/
-│   ├── models/
-│   ├── inference/
-│   ├── preprocessing/
-│   └── ...
-│
-├── docker/
-├── .github/
-│   └── workflows/
-│
-└── README.md
-```
+MEDEXA is being developed to demonstrate practical engineering skills across multiple areas:
 
----
-
-## 🎯 Project Goals
-
-MEDEXA is being developed to explore and demonstrate:
-
-* Full-stack application development
-* Secure REST API design
-* AI/ML model deployment
-* Healthcare data management
-* Microservice-oriented architecture
-* Redis-based rate limiting
-* API management
-* Production-oriented authentication
+* Full-stack application architecture
+* REST API development
+* Secure authentication
+* API security
+* Machine-learning integration
+* AI inference services
+* Database design
+* Redis caching and rate limiting
 * Analytics and data visualization
-* Scalable frontend architecture
-* Dockerized development and deployment
-* CI/CD automation
+* Service separation
+* Docker
+* CI/CD
+* Automated testing
+* Production-oriented development
 
 ---
 
@@ -528,29 +330,27 @@ MEDEXA is being developed to explore and demonstrate:
 * [x] Authentication
 * [x] Patient management
 * [x] Doctor dashboard
-* [x] REST API
+* [x] REST APIs
 * [x] Pagination
 * [x] Dark mode
 * [x] Inventory management
 * [x] Analytics dashboard
 * [x] AI prediction models
-* [x] API key authentication
+* [x] API-key authentication
 * [x] Redis rate limiting
 
 ### In Progress
 
-* [ ] Advanced AI explainability
-* [ ] Improved clinical analytics
-* [ ] Production PostgreSQL deployment
-* [ ] Docker deployment
 * [ ] Automated testing
 * [ ] CI/CD pipeline
 * [ ] API documentation
 * [ ] Advanced monitoring
+* [ ] Advanced AI explainability
+* [ ] Production PostgreSQL deployment
+* [ ] Docker deployment
 
-### Future
+### Planned
 
-* [ ] Role-based hospital staff accounts
 * [ ] Appointment management
 * [ ] Prescription management
 * [ ] Notifications
@@ -558,6 +358,7 @@ MEDEXA is being developed to explore and demonstrate:
 * [ ] Advanced observability
 * [ ] Cloud deployment
 * [ ] Model monitoring
+* [ ] Expanded hospital staff roles
 
 ---
 
@@ -565,9 +366,9 @@ MEDEXA is being developed to explore and demonstrate:
 
 > **Build systems, not just features.**
 
-MEDEXA is an ongoing project focused on understanding how AI models can be integrated into secure, maintainable and scalable software systems.
+MEDEXA is an ongoing project focused on integrating AI models into a secure, maintainable and scalable healthcare platform.
 
-The project intentionally combines **frontend engineering, backend architecture, machine learning, security, APIs, databases, caching and DevOps** to simulate the challenges of building a real-world healthcare technology platform.
+The project combines **AI/ML, full-stack development, backend architecture, API security, databases, caching, analytics and DevOps** to explore the engineering challenges involved in building modern intelligent software systems.
 
 ---
 
@@ -583,10 +384,4 @@ MEDEXA is continuously evolving as new healthcare workflows, AI capabilities, se
 
 MEDEXA is a software engineering and AI research project.
 
-AI-generated predictions are for **educational and decision-support purposes only** and should not be used as a substitute for professional medical diagnosis or treatment.
-
----
-
-## 👨‍💻 Built With
-
-**Next.js · Django · DRF · PostgreSQL · Redis · PyTorch · Docker · REST APIs · Machine Learning**
+AI-generated predictions are intended for educational and decision-support purposes only and should not be used as a substitute for professional medical diagnosis or treatment.
