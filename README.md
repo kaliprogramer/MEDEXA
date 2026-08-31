@@ -50,7 +50,15 @@
 
 > A complete product walkthrough demonstrating the major features and system architecture.
 
-**▶️ [Watch the full MEDEXA demo](./Backends/Backend-Django-Main/video-demo/medexa.mp4)**
+## 🎥 Product Demo
+
+<p align="center">
+  <img
+    src="./assets/medexa-demo.gif"
+    width="900"
+    alt="MEDEXA Demo"
+  />
+</p>
 
 ---
 
