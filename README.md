@@ -35,7 +35,7 @@
 
 <p align="center">
   <img
-    src="./assets/medexa-demo.gif"
+    src="Backends/Backend-Django-Main/video-demo/medexa.gif"
     alt="MEDEXA Product Demo"
     width="900"
   />
