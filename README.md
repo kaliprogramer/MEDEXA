@@ -22,7 +22,16 @@ Built with **Next.js, Django REST Framework, PostgreSQL, Redis, and AI/ML infere
 
 <!-- Replace the URL below with your YouTube/Loom/demo video -->
 
-[![MEDEXA Demo](Backends/Backend-Django-Main/video-demo/medexa.mp4)
+## 🎥 Product Demo
+
+<video
+  src="Backends/Backend-Django-Main/video-demo/medexa.mp4"
+  autoplay
+  muted
+  loop
+  playsinline
+  width="900">
+</video>
 
 **▶️ Watch the full product walkthrough**
 
